@@ -30,10 +30,11 @@ class Estudiante {
 
     method cantidadAprobadas() = materiasAprobadas.size() // CANTIDAD DE MATERIAS
 
-    method suma() = materiasAprobadas.sum({ materia => materia.nota() }) // SUMA DE NOTAS
+    method notas() = materiasAprobadas.map({ materia => materia.nota() }) // NOTAS
 
-    method promedio() = self.suma() / self.cantidadAprobadas() // PROMEDIO DE NOTAS
+    method promedio() = self.notas().average() // PROMEDIO DE NOTAS
 
+    // HOLA PROBANDO
     method aprobar(_materia, _nota) {
       if (self.aprobo(_materia)){
         self.error("...")
