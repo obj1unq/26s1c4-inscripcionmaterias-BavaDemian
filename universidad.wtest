@@ -23,16 +23,18 @@ describe "Instanciación de los objetos correspondientes para los tests" {
     const objetos1 = new Materia()
     const objetos2 = new Materia(correlativas = objetos2Correlativas)
     const objetos3 = new Materia(correlativas = objetos3Correlativas)
-    const programacion = new Materia(inscriptos = #{luisa, romina, alicia, ana})
+    const programacionConcurrente = new Materia(inscriptos = #{luisa, romina, alicia, ana})
+    // INSTANCIA DE CORRELATIVAS
+    const objetos2Correlativas = #{objetos1Aprobada, matematica1Aprobada}
+    const objetos3Correlativas = #{objetos2Aprobada, basesDeDatosAprobada}
     // INSTANCIA DE MATERIAS APROBADAS
     const elementosDeProgramacionAprobada = new MateriaAprobada(materia = nuevaMateriaAprobada.nuevaMateria(), nota = nuevaMateriaAprobada.aprobado())
     const objetos1Aprobada = new MateriaAprobada(materia = nuevaMateriaAprobada.nuevaMateria(), nota = nuevaMateriaAprobada.aprobado())
+    const objetos2Aprobada = new MateriaAprobada(materia = nuevaMateriaAprobada.nuevaMateria(), nota = nuevaMateriaAprobada.aprobado())
     const matematica1Aprobada = new MateriaAprobada(materia = nuevaMateriaAprobada.nuevaMateria(), nota = nuevaMateriaAprobada.aprobado())
     const basesDeDatosAprobada = new MateriaAprobada(materia = nuevaMateriaAprobada.nuevaMateria(), nota = nuevaMateriaAprobada.aprobado())
     const quimicaAprobada = new MateriaAprobada(materia = nuevaMateriaAprobada.nuevaMateria(), nota = nuevaMateriaAprobada.aprobado())
     const biologia1Aprobada = new MateriaAprobada(materia = nuevaMateriaAprobada.nuevaMateria(), nota = nuevaMateriaAprobada.aprobado())
-    const objetos2Correlativas = #{objetos1, matematica1}
-    const objetos3Correlativas = #{objetos2, basesDeDatos}
     /* class Estudiante {
     const carreras = #{}
     const materiasAprobadas = #{}
@@ -40,9 +42,9 @@ describe "Instanciación de los objetos correspondientes para los tests" {
     // INSTANCIA DE ESTUDIANTES
     // ROQUE
     const roque = new Estudiante(materiasAprobadas = roqueAprobadas)
-    const roqueAprobadas = #{elementosDeProgramacion, matematica1, objetos1, basesDeDatos, quimica, biologia1}
+    const roqueAprobadas = #{elementosDeProgramacionAprobada, matematica1Aprobada, objetos1Aprobada, basesDeDatosAprobada, quimicaAprobada, biologia1Aprobada}
     
-    const luisaRominaAliciaMateriasAprobadas = #{elementosDeProgramacion, objetos1, matematica1}
+    const luisaRominaAliciaMateriasAprobadas = #{elementosDeProgramacionAprobada, objetos1Aprobada, matematica1Aprobada}
     // LUISA
     const luisa = new Estudiante(materiasAprobadas = luisaRominaAliciaMateriasAprobadas)
     // ROMINA
@@ -54,7 +56,9 @@ describe "Instanciación de los objetos correspondientes para los tests" {
 
     // TESTS:
     test "Roque puede inscribirse en Objetos 2 pero no en Objetos 3 ni en Objetos 1" {
-        
+        assert.that(objetos2.tieneAprobadasCorrelativas(roque))
+        // assert.notThat(objetos3.puedeInscribirse(roque))
+        // assert.notThat(objetos1.puedeInscribirse(roque))
     }
 
 // Roque puede inscribirse en Objetos 2, pero no en Objetos 3 (porque le falta Objetos 2) ni en Objetos 1 (porque ya la tiene aprobada).

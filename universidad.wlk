@@ -14,7 +14,7 @@ class Materia {
 
     method cantidadDeCreditosQueOtorga() = creditos
 
-    method puedeInscribirse(estudiante) =  estudiante.materiasTotales().contains(self) and !estudiante.aprobo(self) and !self.estaInscripto(estudiante) and self.tieneAprobadasCorrelativas(estudiante)  // 
+    method puedeInscribirse(estudiante) = estudiante.materiasTotales().contains(self) and !estudiante.aprobo(self) and !self.estaInscripto(estudiante) and self.tieneAprobadasCorrelativas(estudiante)  // 
 
     method estaInscripto(estudiante) = self.inscriptos().contains(estudiante) 
 
@@ -33,7 +33,7 @@ class Materia {
       inscriptos.add(estudiante)
     }
 
-    method tieneAprobadasCorrelativas(estudiante) = correlativas.all({materia => estudiante.aprobo(materia)})
+    method tieneAprobadasCorrelativas(estudiante) = correlativas.all({ materia => estudiante.aprobo(materia) })
 
     method darDeBaja(estudiante) {
         inscriptos.remove(estudiante)
@@ -71,9 +71,9 @@ class Estudiante {
 
     method materiasTotales() = carreras.map({ carreras -> carreras.materias() }).flatten()
 
-    method esMateriaAprobada(_materia) = self.materiasAprobadas().contains(_materia)
+    // method esMateriaAprobada(_materia) = 
 
-    method aprobo(materia) = materiasAprobadas.any({ materia => materia.esMateriaAprobada(materia) }) // BOOLEANO 
+    method aprobo(materia) = self.materiasAprobadas().contains(materia) // BOOLEANO
 
     method cantidadAprobadas() = materiasAprobadas.size() // CANTIDAD DE MATERIAS APROBADAS
 
