@@ -1,0 +1,73 @@
+import universidad.*
+
+
+// TESTS
+
+// Suponiendo que
+
+// los requisitos de Objetos 2 son Objetos 1 y Matemática 1.
+// Los requisitos de Objetos 3 son Objetos 2 y Bases de Datos.
+// Los requisitos de Programación Concurrente son Objetos 1 y Bases de Datos.
+// Biología 2 tiene como único requisito a Biología 1.
+// Roque tiene aprobadas Elementos de Programación, Matemática 1, Objetos 1, Bases de Datos, Química y Biología 1.
+// Tenemos a: Luisa, Romina y Alicia que aprobaron Elementos de Programación, Objetos 1, y Matemática 1; Ana que aprobó solamente Elementos de Programación. Todas están cursando Programación Concurrente.
+// Objetos 2 tiene cupo para 3 estudiantes.
+
+describe "Instanciación de los objetos correspondientes para los tests" {
+    // INSTANCIA DE MATERIAS
+    const elementosDeProgramacion = new Materia()
+    const matematica1 = new Materia()
+    const basesDeDatos = new Materia()
+    const quimica = new Materia()
+    const biologia1 = new Materia()
+    const objetos1 = new Materia()
+    const objetos2 = new Materia(correlativas = objetos2Correlativas)
+    const objetos3 = new Materia(correlativas = objetos3Correlativas)
+    const programacion = new Materia(inscriptos = #{luisa, romina, alicia, ana})
+    // INSTANCIA DE MATERIAS APROBADAS
+    const elementosDeProgramacionAprobada = new MateriaAprobada(materia = nuevaMateriaAprobada.nuevaMateria(), nota = nuevaMateriaAprobada.aprobado())
+    const objetos1Aprobada = new MateriaAprobada(materia = nuevaMateriaAprobada.nuevaMateria(), nota = nuevaMateriaAprobada.aprobado())
+    const matematica1Aprobada = new MateriaAprobada(materia = nuevaMateriaAprobada.nuevaMateria(), nota = nuevaMateriaAprobada.aprobado())
+    const basesDeDatosAprobada = new MateriaAprobada(materia = nuevaMateriaAprobada.nuevaMateria(), nota = nuevaMateriaAprobada.aprobado())
+    const quimicaAprobada = new MateriaAprobada(materia = nuevaMateriaAprobada.nuevaMateria(), nota = nuevaMateriaAprobada.aprobado())
+    const biologia1Aprobada = new MateriaAprobada(materia = nuevaMateriaAprobada.nuevaMateria(), nota = nuevaMateriaAprobada.aprobado())
+    const objetos2Correlativas = #{objetos1, matematica1}
+    const objetos3Correlativas = #{objetos2, basesDeDatos}
+    /* class Estudiante {
+    const carreras = #{}
+    const materiasAprobadas = #{}
+    const creditosTotales = 0 */
+    // INSTANCIA DE ESTUDIANTES
+    // ROQUE
+    const roque = new Estudiante(materiasAprobadas = roqueAprobadas)
+    const roqueAprobadas = #{elementosDeProgramacion, matematica1, objetos1, basesDeDatos, quimica, biologia1}
+    
+    const luisaRominaAliciaMateriasAprobadas = #{elementosDeProgramacion, objetos1, matematica1}
+    // LUISA
+    const luisa = new Estudiante(materiasAprobadas = luisaRominaAliciaMateriasAprobadas)
+    // ROMINA
+    const romina = new Estudiante(materiasAprobadas = luisaRominaAliciaMateriasAprobadas)
+    // ALICIA
+    const alicia = new Estudiante(materiasAprobadas = luisaRominaAliciaMateriasAprobadas)
+    // ANA
+    const ana = new Estudiante(materiasAprobadas = #{elementosDeProgramacion})
+
+    // TESTS:
+    test "Roque puede inscribirse en Objetos 2 pero no en Objetos 3 ni en Objetos 1" {
+        
+    }
+
+// Roque puede inscribirse en Objetos 2, pero no en Objetos 3 (porque le falta Objetos 2) ni en Objetos 1 (porque ya la tiene aprobada).
+// Roque puede inscribirse: en Programación, en Objetos 2 y Programación Concurrente; en Medicina, en Biología 2.
+// Si se inscriben, en este orden, Luisa, Romina, Alicia y Roque en Objetos 2, entonces las tres primeras quedan confirmadas, y Roque queda en lista de espera.
+// Si después se da de baja Romina en Objetos 2, entonces Roque pasa a tener la inscripción confirmada en esa materia.
+}
+
+object nuevaMateriaAprobada {
+    method nuevaMateria() = new Materia()
+    method aprobado() = #{4,5,6,7,8,9,10}.anyOne()
+    method desaprobado() = #{0,1,2,3}.anyOne() 
+}
+
+
+
