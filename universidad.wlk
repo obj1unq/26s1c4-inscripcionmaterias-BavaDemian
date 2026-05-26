@@ -1,22 +1,24 @@
 class Carrera {
-    const materias = #{}
-
-    method materias() = materias   
+    const property materias = #{} // Uso property para ahorrar el getter
 }
 
 class Materia {
-    const inscriptos = #{}
-    const correlativas = #{}
-    const listaDeEspera = []
+    const property inscriptos = #{}
+    const property correlativas = #{}
+    const property listaDeEspera = []
     var cupo = 0
     var creditos = 0 
     var año = 0
 
     method cantidadDeCreditosQueOtorga() = creditos
 
-    method puedeInscribirse(estudiante) = estudiante.materiasTotales().contains(self) and !estudiante.aprobo(self) and !self.estaInscripto(estudiante) and self.tieneAprobadasCorrelativas(estudiante)  // 
+    method puedeInscribirse(estudiante) =
+      estudiante.materiasTotales().contains(self)
+      and !estudiante.aprobo(self)
+      and !self.estaInscripto(estudiante)
+      and self.tieneAprobadasCorrelativas(estudiante)
 
-    method estaInscripto(estudiante) = self.inscriptos().contains(estudiante) 
+    method estaInscripto(estudiante) = inscriptos.contains(estudiante) 
 
     method inscribir(estudiante) {
       if(!self.puedeInscribirse(estudiante)){
@@ -27,21 +29,24 @@ class Materia {
     } 
 
     method verificarCupoParaInscribir(estudiante) {
-      if(inscriptos <= cupo){
+      if(inscriptos.size() <= cupo){
         listaDeEspera.add(estudiante)
+      } else {
+        inscriptos.add(estudiante)
       }
-      inscriptos.add(estudiante)
     }
 
     method tieneAprobadasCorrelativas(estudiante) = correlativas.all({ materia => estudiante.aprobo(materia) })
 
     method darDeBaja(estudiante) {
-        inscriptos.remove(estudiante)
+      inscriptos.remove(estudiante)
       if(!listaDeEspera.isEmpty()){
-        inscriptos.add(listaDeEspera.first())
+        const primeroEnEspera = listaDeEspera.first()
+        inscriptos.add(primeroEnEspera)
+        listaDeEspera.remove(primeroEnEspera)
       }
     }
-
+    
     method puedeHacerTrabajoFinal(estudiante) = estudiante.creditosTotales() > 250
 
 	  method inscriptos() = inscriptos // Los estudiantes inscriptos a una materia dada.
@@ -49,31 +54,18 @@ class Materia {
 }
 
 class MateriaAprobada {
-    const materia = null
-    const nota = 0
-
-    method materia() = materia
-    method nota() = nota
-
-    method esMateriaAprobada(materiaAVer) = materiaAVer.materia() == self.materia()
+    const property materia
+    const property nota
 }
 
 class Estudiante {
-    const carreras = #{}
-    const materiasAprobadas = #{}
-    const creditosTotales = 0
-    
-    method carreras() = carreras
+    const property carreras = #{}
+    const property materiasAprobadas = #{}
+    var property creditosTotales = 0
 
-    method creditosTotales() = creditosTotales
+    method materiasTotales() = carreras.flatMap({ carrera => carrera.materias() })
 
-    method materiasAprobadas() = materiasAprobadas
-
-    method materiasTotales() = carreras.map({ carreras -> carreras.materias() }).flatten()
-
-    // method esMateriaAprobada(_materia) = 
-
-    method aprobo(materia) = self.materiasAprobadas().contains(materia) // BOOLEANO
+    method aprobo(materiaASaber) = materiasAprobadas.any({ matAprobada => matAprobada.materia() == materiaASaber })
 
     method cantidadAprobadas() = materiasAprobadas.size() // CANTIDAD DE MATERIAS APROBADAS
 
