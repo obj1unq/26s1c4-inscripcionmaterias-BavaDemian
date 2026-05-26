@@ -1,0 +1,105 @@
+import universidad.*
+
+
+// TESTS
+
+// Suponiendo que
+
+// los requisitos de Objetos 2 son Objetos 1 y Matemática 1.
+// Los requisitos de Objetos 3 son Objetos 2 y Bases de Datos.
+// Los requisitos de Programación Concurrente son Objetos 1 y Bases de Datos.
+// Biología 2 tiene como único requisito a Biología 1.
+// Roque tiene aprobadas Elementos de Programación, Matemática 1, Objetos 1, Bases de Datos, Química y Biología 1.
+// Tenemos a: Luisa, Romina y Alicia que aprobaron Elementos de Programación, Objetos 1, y Matemática 1; Ana que aprobó solamente Elementos de Programación. Todas están cursando Programación Concurrente.
+// Objetos 2 tiene cupo para 3 estudiantes.
+
+describe "Instanciación de los objetos correspondientes para los tests" {
+    // 1. Instanciamos las Materias 
+    const elementosDeProgramacion = new Materia()
+    const matematica1 = new Materia()
+    const basesDeDatos = new Materia()
+    const quimica = new Materia()
+    const biologia1 = new Materia()
+    
+    // 2. Materias con correlativas directas 
+    const objetos1 = new Materia()
+    const objetos2 = new Materia(correlativas = #{objetos1, matematica1}, cupo = 3)
+    const objetos3 = new Materia(correlativas = #{objetos2, basesDeDatos})
+    const programacionConcurrente = new Materia(correlativas = #{objetos1, basesDeDatos})
+    const biologia2 = new Materia(correlativas = #{biologia1})
+
+    // 3. Carreras
+    const carreraProgramacion = new Carrera(materias = #{elementosDeProgramacion, matematica1, basesDeDatos, objetos1, objetos2, objetos3, programacionConcurrente})
+    const carreraMedicina = new Carrera(materias = #{quimica, biologia1, biologia2})
+
+    // 4. Estudiantes 
+    const roque = new Estudiante(carreras = #{carreraProgramacion, carreraMedicina})
+    const luisa = new Estudiante(carreras = #{carreraProgramacion})
+    const romina = new Estudiante(carreras = #{carreraProgramacion})
+    const alicia = new Estudiante(carreras = #{carreraProgramacion})
+    
+    method initialize() {
+        // Materias aprobadas de Roque
+        roque.aprobar(elementosDeProgramacion, 8)
+        roque.aprobar(matematica1, 9)
+        roque.aprobar(objetos1, 7)
+        roque.aprobar(basesDeDatos, 8)
+        roque.aprobar(quimica, 6)
+        roque.aprobar(biologia1, 7)
+
+        // Materias aprobadas de Luisa, Romina y Alicia
+        [luisa, romina, alicia].forEach({ c => 
+            c.aprobar(elementosDeProgramacion, 8)
+            c.aprobar(objetos1, 7)
+            c.aprobar(matematica1, 9)
+        })
+    }
+    // TESTS:
+    test "Roque puede inscribirse en Objetos 2 pero no en Objetos 3 ni en Objetos 1" {
+        // Roque puede inscribirse en Objetos 2, pero no en Objetos 3 (porque le falta Objetos 2) ni en Objetos 1 (porque ya la tiene aprobada).
+        assert.that(objetos2.puedeInscribirse(roque))
+        assert.notThat(objetos3.puedeInscribirse(roque))
+        assert.notThat(objetos1.puedeInscribirse(roque))
+    }
+
+    test "Materias a las que se puede inscribir Roque por carrera" {
+        // Roque puede inscribirse: en Programación, en Objetos 2 y Programación Concurrente; en Medicina, en Biología 2.
+
+        // En programación puede inscribirse a Objetos 2 y a Programación Concurrente:
+        assert.equals(#{objetos2, programacionConcurrente}, roque.materiasQueSePuedeInscribir(carreraProgramacion).asSet())
+        
+        // En medicina puede inscribirse a Biología 2:
+        assert.equals(#{biologia2}, roque.materiasQueSePuedeInscribir(carreraMedicina).asSet())
+    }
+
+    test "Cupo y lista de espera" {
+        // Si se inscriben, en este orden, Luisa, Romina, Alicia y Roque en Objetos 2, entonces las tres primeras quedan confirmadas, y Roque queda en lista de espera.
+        objetos2.inscribir(luisa)
+        objetos2.inscribir(alicia)
+        objetos2.inscribir(romina)
+        objetos2.inscribir(roque) // Debe ir a lista de espera por el cupo
+
+        // Las tres primeras quedan confirmadas
+        assert.that(objetos2.estaInscripto(luisa))
+        assert.that(objetos2.estaInscripto(romina))
+        assert.that(objetos2.estaInscripto(alicia))
+        assert.notThat(objetos2.estaInscripto(roque)) // Verifico que Roque no está inscripto en objetos 2
+        assert.equals([roque], objetos2.listaDeEspera()) // Verifico que Roque está en la lista de espera de Objetos 2
+    }
+
+    test "description" {
+        // Si después se da de baja Romina en Objetos 2, entonces Roque pasa a tener la inscripción confirmada en esa materia.
+        objetos2.inscribir(luisa)
+        objetos2.inscribir(romina)
+        objetos2.inscribir(alicia)
+        objetos2.inscribir(roque)
+
+
+        objetos2.darDeBaja(romina) // Se da de baja Romina
+
+        assert.equals(#{luisa, alicia, roque}, objetos2.inscriptos()) //Verifico que en los nuevos inscriptos de Objetos 2 está Roque
+    }
+}
+
+
+
