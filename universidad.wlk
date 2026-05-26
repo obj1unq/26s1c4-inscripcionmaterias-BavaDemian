@@ -29,10 +29,10 @@ class Materia {
     } 
 
     method verificarCupoParaInscribir(estudiante) {
-      if(inscriptos.size() <= cupo){
-        listaDeEspera.add(estudiante)
-      } else {
+      if(inscriptos.size() < cupo){
         inscriptos.add(estudiante)
+      } else {
+        listaDeEspera.add(estudiante)
       }
     }
 
@@ -84,10 +84,10 @@ class Estudiante {
     method materiasQueEstaInscriptoDeCarreras() = carreras.materias().flatten()
 
     method materiasQueSePuedeInscribir(carrera) {
-      if(!carreras.contains(carrera))
-        {self.error("No cursa esta carrera")}
-      else
-        carrera.materias().filter({ materia => materia.puedeInscribirse(self) }) 
+      if(!carreras.contains(carrera)){
+        self.error("No cursa esta carrera")
+      }
+      return carrera.materias().filter({ materia => materia.puedeInscribirse(self) }) 
     }
 
     method materiasInscripto() = self.materiasTotales().filter({ materia => materia.estaInscripto(self) })
